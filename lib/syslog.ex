@@ -60,7 +60,6 @@ defmodule Logger.Backends.Syslog do
 
     packet = [pre, Logger.Formatter.format(format, level, msg, ts, Dict.take(md, metadata)), '\n']
     :gen_udp.send(socket, host, port, packet)    
-    # :io.put_chars :user, inspect(packet)
   end
 
 end

@@ -4,7 +4,7 @@ defmodule Syslog.Mixfile do
   def project do
     [app: :syslog,
      version: "0.0.1",
-     elixir: "~> 0.14.4-dev",
+     elixir: "~> 0.15.0",
      deps: deps]
   end
 
@@ -26,8 +26,7 @@ defmodule Syslog.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:logger, github: "josevalim/logger"},
-      {:exprintf, "~>0.1.0"},
+      {:exprintf, "~>0.1.3"},
     ]
   end
 end
