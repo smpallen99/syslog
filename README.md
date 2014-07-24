@@ -23,6 +23,23 @@ use Mix.Config
 config :logger, :syslog, [level: :debug, facility: :local2, appid: "myproj"]
 ```
 
+### Add the Backend
+
+You need to add the backend. Probably best to add it in the application startup.
+
+```
+defmoudule MyMod do
+  use Application
+  require Logger
+
+  def start(_type, _args) do
+    # ...
+    Logger.add_backend Logger.Backends.Syslog
+    # ...
+  end
+end
+```
+
 ### Syslog Server
 
 The syslog server must be configured to support remote logging. On a Redhat based 
