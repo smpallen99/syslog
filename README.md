@@ -1,4 +1,5 @@
-# Syslog
+Syslog
+======
 
 Syslog is an Elixir port of the erlang [Twig](https://github.com/cloudant/twig) 
 logger. It is an Elixir logger backend providing UDP support to a syslog server.
@@ -23,12 +24,27 @@ use Mix.Config
 config :logger, :syslog, [level: :debug, facility: :local2, appid: "myproj"]
 ```
 
+### Add the application
+
+You should also add the `syslog` application in the `mix.exs` file as shown below:
+
+```
+defmodule MyMod.Mixfile do
+  # ...
+  def application do
+    [applications: [:logger, :syslog],
+     mod: {MyMod, []}]
+  end
+  # ...
+end
+```
+
 ### Add the Backend
 
 You need to add the backend. Probably best to add it in the application startup.
 
 ```
-defmoudule MyMod do
+defmodule MyMod do
   use Application
   require Logger
 
@@ -63,6 +79,10 @@ The facility also needs to be configured. Again, for Redhat distributions, edit
 ...
 local2.*                    /var/log/my_elixir_project.log
 ```
+
+## Example Project
+
+Checkout the following [test project](https://github.com/smpallen99/test_syslog) for a working example.
 
 ## License
 
