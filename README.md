@@ -21,7 +21,7 @@ level debug, facility local1, and appid myproj
 
 ```
 use Mix.Config
-config :logger, :syslog, [level: :debug, facility: :local2, appid: "myproj"]
+config :logger, :syslog, [level: :debug, facility: :local1, appid: "myproj"]
 ```
 
 ### Add the application
@@ -78,6 +78,17 @@ The facility also needs to be configured. Again, for Redhat distributions, edit
 *.info;local1.none;mail.none;authpriv.none;cron.none            /var/log/messages
 ...
 local2.*                    /var/log/my_elixir_project.log
+```
+
+Then restart the `syslog` service after making the configuration changes
+
+```
+root@ucx20 ~]# service syslog restart
+Shutting down kernel logger:                               [  OK  ]
+Shutting down system logger:                               [  OK  ]
+Starting system logger:                                    [  OK  ]
+Starting kernel logger:                                    [  OK  ]
+[root@ucx20 ~]#
 ```
 
 ## Example Project
