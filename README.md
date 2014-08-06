@@ -69,6 +69,12 @@ SYSLOGD_OPTIONS="-m 0 -r"
 ...
 ```
 
+If your system uses `rsyslog` you should add or uncomment the following lines in your `/etc/rsyslog.conf`:
+```
+$ModLoad imudp
+$UDPServerRun 514
+```
+
 The facility also needs to be configured. Again, for Redhat distributions, edit 
 `/etc/syslog.conf`, edit the first line below and and add the second:
 
