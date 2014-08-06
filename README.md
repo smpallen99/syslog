@@ -28,7 +28,7 @@ config :logger, :syslog, [level: :debug, facility: :local2, appid: "myproj"]
 You need to add the backend. Probably best to add it in the application startup.
 
 ```
-defmoudule MyMod do
+defmodule MyMod do
   use Application
   require Logger
 
