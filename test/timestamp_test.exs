@@ -11,7 +11,7 @@ defmodule Utils.TimestampTest do
     [h, m, s] = String.split(hms, ":")
     assert mon =~ ~r/^[A-Z][a-z][a-z]$/
     for x <- [h, m, s, day], do:
-      assert x =~ ~r/^^\d\d$/
+      assert x =~ ~r/^\d\d$/
     [h, m, s, day] = for x <- [h, m, s, day], do:
       Integer.parse(x) |> elem(0)
     assert day >= 1
