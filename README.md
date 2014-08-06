@@ -20,7 +20,7 @@ level debug, facility local1, and appid myproj
 
 ```
 use Mix.Config
-config :logger, :syslog, [level: :debug, facility: :local1, appid: "myproj"]
+config :logger, :syslog, [level: :debug, facility: :local2, appid: "myproj"]
 ```
 
 ### Syslog Server
