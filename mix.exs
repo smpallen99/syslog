@@ -25,8 +25,6 @@ defmodule Syslog.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [
-      {:exprintf, "~>0.1.3"},
-    ]
+    []
   end
 end

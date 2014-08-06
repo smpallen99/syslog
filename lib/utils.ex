@@ -1,12 +1,13 @@
 defmodule Logger.Syslog.Utils do
-  import ExPrintf
   use Bitwise
   
   def iso8601_timestamp do
     now = :os.timestamp()
     {{_year,month,date},{hour,minute,second}} = :calendar.now_to_datetime(now)
     mstr = elem({"Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"}, month)
-    sprintf("%s %02d %02d:%02d:%02d", [mstr, date, hour, minute, second])
+    :io_lib.format("~s ~2..0B ~2..0B:~2..0B:~2..0B",
+      [mstr, date, hour, minute, second])
+    |> to_string
   end
 
   def facility(:local0),    do:  (16 <<< 3)
