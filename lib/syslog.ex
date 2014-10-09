@@ -21,7 +21,7 @@ defmodule Logger.Backends.Syslog do
   end
 
   def handle_event({level, _gl, {Logger, msg, ts, md}}, %{level: min_level} = state) do
-    if nil?(min_level) or Logger.compare_levels(level, min_level) != :lt do
+    if is_nil(min_level) or Logger.compare_levels(level, min_level) != :lt do
       log_event(level, msg, ts, md, state)
     end
     {:ok, state}
@@ -38,7 +38,7 @@ defmodule Logger.Backends.Syslog do
       |> Keyword.get(:format)
       |> Logger.Formatter.compile
 
-    level    = Keyword.get(syslog, :level) 
+    level    = Keyword.get(syslog, :level)
     level_num = level |> Logger.Syslog.Utils.level
     metadata = Keyword.get(syslog, :metadata, [])
     host     = Keyword.get(syslog, :host, '127.0.0.1')
@@ -47,19 +47,19 @@ defmodule Logger.Backends.Syslog do
     appid    = Keyword.get(syslog, :appid, :elixir)
     [hostname | _] = String.split("#{:net_adm.localhost()}", ".")
     %{format: format, metadata: metadata, level: level, socket: socket,
-      host: host, port: port, facility: facility, appid: appid, 
+      host: host, port: port, facility: facility, appid: appid,
       level_num: level_num, hostname: hostname}
   end
 
   defp log_event(level, msg, ts, md, state) do
-    %{format: format, metadata: metadata, facility: facility, appid: appid, 
-    hostname: _hostname, host: host, port: port, socket: socket, level_num: level_num} = state 
+    %{format: format, metadata: metadata, facility: facility, appid: appid,
+    hostname: _hostname, host: host, port: port, socket: socket, level_num: level_num} = state
 
     pre = :io_lib.format('<~B>~s ~s~p: ', [facility ||| level_num,
       Logger.Syslog.Utils.iso8601_timestamp, appid, self])
 
     packet = [pre, Logger.Formatter.format(format, level, msg, ts, Dict.take(md, metadata)), '\n']
-    :gen_udp.send(socket, host, port, packet)    
+    :gen_udp.send(socket, host, port, packet)
   end
 
 end
