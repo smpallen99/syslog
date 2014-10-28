@@ -21,7 +21,11 @@ level debug, facility local1, and appid myproj
 
 ```
 use Mix.Config
-config :logger, :syslog, [level: :debug, facility: :local1, appid: "myproj"]
+config :logger, [
+  level: :debug,
+  backends: [Logger.Backends.Syslog],
+  syslog: [facility: :local1, appid: "myproj"]
+]
 ```
 
 ### Add the application
@@ -36,23 +40,6 @@ defmodule MyMod.Mixfile do
      mod: {MyMod, []}]
   end
   # ...
-end
-```
-
-### Add the Backend
-
-You need to add the backend. Probably best to add it in the application startup.
-
-```
-defmodule MyMod do
-  use Application
-  require Logger
-
-  def start(_type, _args) do
-    # ...
-    Logger.add_backend Logger.Backends.Syslog
-    # ...
-  end
 end
 ```
 
