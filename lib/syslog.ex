@@ -58,7 +58,7 @@ defmodule Logger.Backends.Syslog do
     pre = :io_lib.format('<~B>~s ~s~p: ', [facility ||| level_num,
       Logger.Syslog.Utils.iso8601_timestamp, appid, self])
 
-    packet = [pre, Logger.Formatter.format(format, level, msg, ts, Dict.take(md, metadata)), '\n']
+    packet = [pre, Logger.Formatter.format(format, level, msg, ts, Dict.take(md, metadata))]
     :gen_udp.send(socket, host, port, packet)
   end
 
