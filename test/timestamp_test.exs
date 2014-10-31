@@ -5,7 +5,7 @@ defmodule Utils.TimestampTest do
   import Utils, only: [iso8601_timestamp: 1]
 
   test "timestamp format" do
-    ts = :calendar.local_time()
+    ts = Logger.Utils.timestamp(false)
     s = iso8601_timestamp(ts)
     assert String.length(s) == 15
     [mon, day, hms] = String.split(s)

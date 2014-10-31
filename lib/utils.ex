@@ -1,7 +1,8 @@
 defmodule Logger.Syslog.Utils do
   use Bitwise
   
-  def iso8601_timestamp({{_year,month,date},{hour,minute,second}}) do
+
+  def iso8601_timestamp({{_year,month,date},{hour,minute,second,_}}) do
     mstr = elem({"Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"}, month-1)
     :io_lib.format("~s ~2..0B ~2..0B:~2..0B:~2..0B",
       [mstr, date, hour, minute, second])
