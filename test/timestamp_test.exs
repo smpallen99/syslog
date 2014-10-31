@@ -2,10 +2,11 @@ alias Logger.Syslog.Utils
 defmodule Utils.TimestampTest do
   use ExUnit.Case
 
-  import Utils, only: [iso8601_timestamp: 0]
+  import Utils, only: [iso8601_timestamp: 1]
 
   test "timestamp format" do
-    s = iso8601_timestamp
+    ts = :calendar.local_time()
+    s = iso8601_timestamp(ts)
     assert String.length(s) == 15
     [mon, day, hms] = String.split(s)
     [h, m, s] = String.split(hms, ":")

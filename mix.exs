@@ -3,8 +3,8 @@ defmodule Syslog.Mixfile do
 
   def project do
     [app: :syslog,
-     version: "0.5.0",
-     elixir: "~> 1.0.0",
+     version: "0.5.1",
+     elixir: ">= 1.0.0",
      deps: deps]
   end
 
