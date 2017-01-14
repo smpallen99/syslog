@@ -17,7 +17,7 @@ Syslog's behavior is controlled using the application configuration environment:
 * __appid__ (:elixir): inserted as the APPID in the syslog message
 
 For example, the following `config/config.exs` file sets up syslog using 
-level debug, facility local1, and appid myproj
+level debug, facility local2, and appid myproj
 
 ```
 use Mix.Config
