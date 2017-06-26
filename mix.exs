@@ -5,7 +5,7 @@ defmodule Syslog.Mixfile do
     [app: :syslog,
      version: "0.5.1",
      elixir: ">= 1.0.0",
-     deps: deps]
+     deps: deps()]
   end
 
   # Configuration for the OTP application
