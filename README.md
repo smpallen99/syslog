@@ -1,7 +1,7 @@
 Syslog
 ======
 
-Syslog is an Elixir port of the erlang [Twig](https://github.com/cloudant/twig) 
+Syslog is an Elixir port of the erlang [Twig](https://github.com/cloudant/twig)
 logger. It is an Elixir logger backend providing UDP support to a syslog server.
 
 ## Configuration
@@ -16,7 +16,7 @@ Syslog's behavior is controlled using the application configuration environment:
 * __level__ (:info): logging threshold. Messages "above" this threshold (in syslog parlance) will be discarded. Acceptable values are debug, info, notice, warn, err, crit, alert, and emerg.
 * __appid__ (:elixir): inserted as the APPID in the syslog message
 
-For example, the following `config/config.exs` file sets up syslog using 
+For example, the following `config/config.exs` file sets up syslog using
 level debug, facility local1, and appid myproj
 
 ```
@@ -45,7 +45,7 @@ end
 
 ### Syslog Server
 
-The syslog server must be configured to support remote logging. On a Redhat based 
+The syslog server must be configured to support remote logging. On a Redhat based
 Linux distribution, you can setup remote logging by editing `/etc/sysconfig/syslog`
 and add the -r option as shown below:
 
@@ -62,7 +62,7 @@ $ModLoad imudp
 $UDPServerRun 514
 ```
 
-The facility also needs to be configured. Again, for Redhat distributions, edit 
+The facility also needs to be configured. Again, for Redhat distributions, edit
 `/etc/syslog.conf`, edit the first line below and and add the second:
 
 ```
@@ -90,7 +90,7 @@ Checkout the following [test project](https://github.com/smpallen99/test_syslog)
 
 ## License
 
-syslog is copyright (c) 2014 E-MetroTel. 
+syslog is copyright (c) 2014-2018 E-MetroTel.
 
 The source code is released under the MIT License.
 

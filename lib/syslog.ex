@@ -1,5 +1,6 @@
 defmodule Logger.Backends.Syslog do
-  use GenEvent
+  @behaviour :gen_event
+
   use Bitwise
 
   def init(_) do
@@ -53,12 +54,13 @@ defmodule Logger.Backends.Syslog do
 
   defp log_event(level, msg, ts, md, state) do
     %{format: format, metadata: metadata, facility: facility, appid: appid,
-    hostname: _hostname, host: host, port: port, socket: socket, level_num: level_num} = state
+    hostname: _hostname, host: host, port: port, socket: socket} = state
 
+    level_num = Logger.Syslog.Utils.level(level)
     pre = :io_lib.format('<~B>~s ~s~p: ', [facility ||| level_num,
-      Logger.Syslog.Utils.iso8601_timestamp(ts), appid, self])
-
-    packet = [pre, Logger.Formatter.format(format, level, msg, ts, Dict.take(md, metadata))]
+      Logger.Syslog.Utils.iso8601_timestamp(ts), appid, self()])
+    meta = Enum.filter md, & elem(&1, 0) in metadata
+    packet = [pre, Logger.Formatter.format(format, level, msg, ts, meta)]
     if socket, do: :gen_udp.send(socket, host, port, packet)
   end
 end

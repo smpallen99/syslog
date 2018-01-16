@@ -1,11 +1,10 @@
 defmodule Logger.Syslog.Utils do
   use Bitwise
-  
 
-  def iso8601_timestamp({{_year,month,date},{hour,minute,second,_}}) do
-    mstr = elem({"Jan","Feb","Mar","Apr","May","Jun","Jul", "Aug","Sep","Oct","Nov","Dec"}, month-1)
-    :io_lib.format("~s ~2..0B ~2..0B:~2..0B:~2..0B",
-      [mstr, date, hour, minute, second])
+
+  def iso8601_timestamp({{year,month,date},{hour,minute,second,micro}}) do
+    :io_lib.format("~4..0B-~2..0B-~2..0BT~2..0B:~2..0B:~2..0B.~3..0BZ",
+      [year, month, date, hour, minute, second, micro])
     |> to_string
   end
 
@@ -29,7 +28,7 @@ defmodule Logger.Syslog.Utils do
   def level(:alert),   do: 1
   def level(:emerg),   do: 0
   def level(:panic),   do: 0
-  
+
   def level(i) when is_integer(i) when i >= 0 and i <= 7, do: i
   def level(_bad), do: 3
 end
