@@ -40,7 +40,6 @@ defmodule Logger.Backends.Syslog do
       |> Logger.Formatter.compile
 
     level    = Keyword.get(syslog, :level)
-    level_num = level |> Logger.Syslog.Utils.level
     metadata = Keyword.get(syslog, :metadata, [])
     host     = Keyword.get(syslog, :host, '127.0.0.1')
     port     = Keyword.get(syslog, :port, 514)
@@ -48,8 +47,7 @@ defmodule Logger.Backends.Syslog do
     appid    = Keyword.get(syslog, :appid, :elixir)
     [hostname | _] = String.split("#{:net_adm.localhost()}", ".")
     %{format: format, metadata: metadata, level: level, socket: socket,
-      host: host, port: port, facility: facility, appid: appid,
-      level_num: level_num, hostname: hostname}
+      host: host, port: port, facility: facility, appid: appid, hostname: hostname}
   end
 
   defp log_event(level, msg, ts, md, state) do
@@ -59,8 +57,7 @@ defmodule Logger.Backends.Syslog do
     level_num = Logger.Syslog.Utils.level(level)
     pre = :io_lib.format('<~B>~s ~s~p: ', [facility ||| level_num,
       Logger.Syslog.Utils.iso8601_timestamp(ts), appid, self()])
-    meta = Enum.filter md, & elem(&1, 0) in metadata
-    packet = [pre, Logger.Formatter.format(format, level, msg, ts, meta)]
+    packet = [pre, Logger.Formatter.format(format, level, msg, ts, Keyword.take(md, metadata))]
     if socket, do: :gen_udp.send(socket, host, port, packet)
   end
 end
