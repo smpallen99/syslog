@@ -28,6 +28,10 @@ defmodule Logger.Backends.Syslog do
     {:ok, state}
   end
 
+  def handle_info(_msg, state) do
+    {:ok, state}
+  end
+
   ## Helpers
 
   defp configure(options) do
