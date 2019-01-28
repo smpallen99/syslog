@@ -44,6 +44,12 @@ defmodule Logger.Backends.Syslog do
     {:ok, state}
   end
 
+  def terminate(_, state) do
+    socket = state.socket
+    if socket, do: :gen_udp.close(socket)
+    :ok
+  end
+
   ## Helpers
 
   defp configure(options, state) do
