@@ -3,18 +3,30 @@ defmodule Logger.Backends.Syslog do
 
   use Bitwise
 
+  defstruct format: nil,
+    metadata: nil,
+    level: nil,
+    socket: nil,
+    host: nil,
+    port: nil,
+    facility: nil,
+    appid: nil,
+    hostname: nil
+
   def init(_) do
+    config = Application.get_env(:logger, :syslog)
+
     if user = Process.whereis(:user) do
       Process.group_leader(self(), user)
       {:ok, socket} = :gen_udp.open(0)
-      {:ok, configure([socket: socket])}
+      {:ok, init(config, %__MODULE__{socket: socket})}
     else
       {:error, :ignore}
     end
   end
 
-  def handle_call({:configure, options}, _state) do
-    {:ok, :ok, configure(options)}
+  def handle_call({:configure, options}, state) do
+    {:ok, :ok, configure(options, state)}
   end
 
   def handle_event({_level, gl, _event}, state) when node(gl) != node() do
@@ -32,26 +44,43 @@ defmodule Logger.Backends.Syslog do
     {:ok, state}
   end
 
+  def terminate(_, state) do
+    socket = state.socket
+    if socket, do: :gen_udp.close(socket)
+    :ok
+  end
+
   ## Helpers
 
-  defp configure(options) do
-    syslog = Keyword.merge(Application.get_env(:logger, :syslog, []), options)
-    socket = Keyword.get(options, :socket)
-    Application.put_env(:logger, :syslog, syslog)
+  defp configure(options, state) do
+    config = Keyword.merge(Application.get_env(:logger, :syslog, []), options)
+    Application.put_env(:logger, :syslog, config)
+    init(config, state)
+  end
 
-    format = syslog
+  defp init(config, state) do
+    format = config
       |> Keyword.get(:format)
       |> Logger.Formatter.compile
 
-    level    = Keyword.get(syslog, :level)
-    metadata = Keyword.get(syslog, :metadata, [])
-    host     = Keyword.get(syslog, :host, '127.0.0.1')
-    port     = Keyword.get(syslog, :port, 514)
-    facility = Keyword.get(syslog, :facility, :local2) |> Logger.Syslog.Utils.facility
-    appid    = Keyword.get(syslog, :appid, :elixir)
+    level    = Keyword.get(config, :level)
+    metadata = Keyword.get(config, :metadata, [])
+    host     = Keyword.get(config, :host, '127.0.0.1')
+    port     = Keyword.get(config, :port, 514)
+    facility = Keyword.get(config, :facility, :local2) |> Logger.Syslog.Utils.facility
+    appid    = Keyword.get(config, :appid, :elixir)
     [hostname | _] = String.split("#{:net_adm.localhost()}", ".")
-    %{format: format, metadata: metadata, level: level, socket: socket,
-      host: host, port: port, facility: facility, appid: appid, hostname: hostname}
+
+    %{state |
+      format: format,
+      metadata: metadata,
+      level: level,
+      socket: state.socket,
+      host: host,
+      port: port,
+      facility: facility,
+      appid: appid,
+      hostname: hostname}
   end
 
   defp log_event(level, msg, ts, md, state) do
