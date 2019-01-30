@@ -7,21 +7,31 @@ defmodule Utils.TimestampTest do
   test "timestamp format" do
     ts = Logger.Utils.timestamp(false)
     s = iso8601_timestamp(ts)
-    assert String.length(s) == 15
-    [mon, day, hms] = String.split(s)
-    [h, m, s] = String.split(hms, ":")
-    assert mon =~ ~r/^[A-Z][a-z][a-z]$/
-    for x <- [h, m, s, day], do:
-      assert x =~ ~r/^\d\d$/
-    [h, m, s, day] = for x <- [h, m, s, day], do:
-      Integer.parse(x) |> elem(0)
-    assert day >= 1
-    assert day <= 31
-    assert h >= 0
-    assert h <= 23
-    assert m >= 0
-    assert m <= 59
-    assert s >= 0
-    assert s <= 59
+    {:ok, regex} = Regex.compile("(?<year>\\d{4})-" <>
+      "(?<month>\\d{2})-" <>
+      "(?<day>\\d{2})" <>
+      "T" <>
+      "(?<hours>\\d{2})" <>
+      ":" <>
+      "(?<minutes>\\d{2})" <>
+      ":" <>
+      "(?<seconds>\\d{2})" <>
+      "\." <>
+      "(?<fraction>\\d+)" <>
+      "Z"
+    )
+    matches = Regex.named_captures(regex, s)
+    t = Map.new(matches, fn {k, v} ->
+      {i, ""} = Integer.parse(v)
+      {String.to_atom(k), i}
+    end)
+
+    assert t.year >= 0
+    assert t.month >= 1 and t.month <= 31
+    assert t.day >= 1 and t.day <= 31
+    assert t.hours >= 0 and t.hours <= 23
+    assert t.minutes >= 0 and t.minutes <= 59
+    assert t.seconds >= 0 and t.seconds <= 59
+    assert t.fraction >= 0
   end
 end
