@@ -22,6 +22,13 @@ defmodule Logger.Backends.Syslog do
   end
 
   def handle_event({level, _gl, {Logger, msg, ts, md}}, %{level: min_level} = state) do
+    # using :warn produces a deprecation warning from Logger since Elixir v1.15
+    level =
+      case level do
+        :warn -> :warning
+        level -> level
+      end
+
     if is_nil(min_level) or Logger.compare_levels(level, min_level) != :lt do
       log_event(level, msg, ts, md, state)
     end
